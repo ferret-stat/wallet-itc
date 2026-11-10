@@ -17,7 +17,7 @@ class Settings:
     if not all([pg_user, pg_pass, pg_name]):
         raise ValueError("Missing PostgreSQL environment variables")
 
-    conn_string = (
+    database_url = (
         f"postgresql+asyncpg://"
         f"{quote_plus(pg_user)}:{quote_plus(pg_pass)}"
         f"@{pg_host}:{pg_port}/{pg_name}"
