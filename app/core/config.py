@@ -6,13 +6,14 @@ load_dotenv()
 
 
 class Settings:
-    app_name = os.getenv("APP_NAME", "Wallet API")
+    app_name: str = os.getenv("APP_NAME", "Wallet API")
 
-    pg_user = os.getenv("POSTGRE_USER")
-    pg_pass = os.getenv("POSTGRE_PASS")
-    pg_name = os.getenv("POSTGRE_NAME")
-    pg_host = os.getenv("POSTGRE_HOST", "localhost")
-    pg_port = int(os.getenv("POSTGRE_PORT", "5432"))
+    pg_user: str = os.getenv("POSTGRE_USER")
+    pg_pass: str = os.getenv("POSTGRE_PASS")
+    pg_name: str = os.getenv("POSTGRE_NAME")
+    api_key: str = os.getenv("API_KEY")
+    pg_host: str = os.getenv("POSTGRE_HOST", "localhost")
+    pg_port: int = int(os.getenv("POSTGRE_PORT", "5432"))
 
     if not all([pg_user, pg_pass, pg_name]):
         raise ValueError("Missing PostgreSQL environment variables")

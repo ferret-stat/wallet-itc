@@ -1,5 +1,7 @@
-from uuid import UUID
+import uuid
 
+from uuid import UUID
+from decimal import Decimal
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -26,3 +28,20 @@ class WalletRepository:
         result = await self.session.execute(stmt)
 
         return result.scalar_one_or_none()
+
+    async def create(
+        self,
+        wallet_id: UUID | None = None,
+        balance: Decimal | None = None,
+    ) -> Wallet:
+        wallet = Wallet(
+            id=wallet_id or uuid.uuid4(),
+            balance=balance or Decimal("0.00"),
+        )
+
+        self.session.add(wallet)
+
+        await self.session.flush()
+
+        return wallet
+
