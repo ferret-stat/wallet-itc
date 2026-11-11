@@ -1,4 +1,3 @@
-
 import asyncio
 from logging.config import fileConfig
 
@@ -14,10 +13,19 @@ config = context.config
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
 
+
 # Database configuration
+database = context.get_x_argument(as_dictionary=True).get("database")
+
+database_url = (
+    settings.test_database_url
+    if database == "test"
+    else settings.database_url
+)
+
 config.set_main_option(
     "sqlalchemy.url",
-    settings.database_url.replace("%", "%%"),
+    database_url.replace("%", "%%"),
 )
 
 # SQLAlchemy metadata
@@ -79,4 +87,5 @@ if context.is_offline_mode():
     run_migrations_offline()
 else:
     run_migrations_online()
+
 
