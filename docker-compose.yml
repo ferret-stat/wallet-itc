@@ -1,25 +1,50 @@
-
+name: wallet
 services:
   db:
     image: postgres:16-alpine
-    container_name: wallet_db
+    container_name: wallet-api-db
+    restart: unless-stopped
+
     environment:
-      POSTGRES_DB: ${POSTGRE_NAME}
       POSTGRES_USER: ${POSTGRE_USER}
       POSTGRES_PASSWORD: ${POSTGRE_PASS}
+      POSTGRES_DB: ${POSTGRE_NAME}
+
     ports:
-      - "${POSTGRE_PORT}:5432"
+      - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${POSTGRE_USER} -d ${POSTGRE_NAME}"
-        ]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRE_USER} -d ${POSTGRE_NAME}"]
       interval: 5s
       timeout: 5s
       retries: 5
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+
+    container_name: wallet-api
+    restart: unless-stopped
+
+    env_file:
+      - .env
+
+    environment:
+      POSTGRE_HOST: db
+      POSTGRE_PORT: 5432
+      TEST_HOST: db
+      TEST_PORT: 5432
+
+    ports:
+      - "8000:8000"
+
+    depends_on:
+      db:
+        condition: service_healthy
 
 volumes:
   postgres_data:
