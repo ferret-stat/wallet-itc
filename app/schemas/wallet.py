@@ -5,6 +5,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict, Field
 
+
 class WalletCreateRequest(BaseModel):
     wallet_id: UUID | None = None
     balance: Decimal | None = Field(

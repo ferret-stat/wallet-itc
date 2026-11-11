@@ -61,3 +61,16 @@ async def test_create_wallet_invalid_uuid(client):
     )
 
     assert response.status_code == 422
+
+
+@pytest.mark.asyncio
+async def test_create_wallet_with_initial_balance(client):
+    response = await client.post(
+        "/api/v1/wallets/create",
+        json={
+            "balance": "500.00",
+        },
+    )
+
+    assert response.status_code == 201
+    assert response.json()["balance"] == "500.00"

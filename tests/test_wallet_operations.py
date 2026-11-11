@@ -1,3 +1,5 @@
+from uuid import uuid4
+
 import pytest
 
 
@@ -119,3 +121,18 @@ async def test_invalid_operation_type(client):
     )
 
     assert response.status_code == 422
+
+@pytest.mark.asyncio
+async def test_operation_nonexistent_wallet(client):
+    wallet_id = str(uuid4())
+
+    response = await client.post(
+        f"/api/v1/wallets/{wallet_id}/operation",
+        json={
+            "operation_type": "DEPOSIT",
+            "amount": "100.00",
+        },
+    )
+
+    assert response.status_code == 404
+    assert response.json()["detail"] == "Wallet not found"

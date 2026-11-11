@@ -1,6 +1,5 @@
 
 import asyncio
-
 from logging.config import fileConfig
 
 from alembic import context
@@ -9,8 +8,6 @@ from sqlalchemy.ext.asyncio import async_engine_from_config
 
 from app.core.config import settings
 from app.database.db import Base
-from app.database import models
-
 
 config = context.config
 
